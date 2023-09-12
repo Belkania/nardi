@@ -1,0 +1,128 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+}
+.mainScreen {
+  width: 60%;
+  height: 700px;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  background-image: url("img/wood.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.startBtn {
+  position: absolute;
+  top: calc(50% - 30px);
+  left: calc(50% - 100px);
+  transition: 0.8s;
+  width: 200px;
+  height: 60px;
+  background: black;
+  color: white;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+.startBtn:hover {
+  background-color: rgba(108, 14, 14, 0.859);
+}
+.slot {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.verticalLIne {
+  width: 2%;
+  height: 100%;
+  position: absolute;
+  left: 49%;
+  background-color: black;
+}
+.triangle {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.triangle2 {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+.whiteSlot {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background-color: white;
+  position: relative;
+  z-index: 2;
+  cursor: move;
+}
+.blackSlot {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background-color: black;
+  position: relative;
+  z-index: 2;
+  cursor: move;
+}
+.dice,
+.confirm,
+.players {
+  width: 105px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.dice1,
+.dice2,
+.apply,
+.cancel,
+.p1,
+.p2 {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.confirm {
+  top: 60px;
+}
+.players {
+  top: 120px;
+}
+.apply {
+  background-color: green;
+}
+.cancel {
+  background-color: red;
+}
