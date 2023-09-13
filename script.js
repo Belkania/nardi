@@ -26,8 +26,8 @@ let posX = 0;
 let posY = 0;
 let allow = true;
 let moveCount = 2;
-let topIndex = 0;
-let bottomIndex = 0;
+let topIndex = false;
+let bottomIndex = false;
 let dragged,
   dragged2,
   dragged3,
@@ -52,13 +52,18 @@ let player2 = {
 };
 
 const rollDice = () => {
-  const num1 = Math.floor(Math.random() * 6) + 1;
-  const num2 = Math.floor(Math.random() * 6) + 1;
-  dice1.innerHTML = num1;
-  dice2.innerHTML = num2;
+  for (let i = 0; i < 2; i++) {
+    let random = Math.floor(Math.random() * 6) + 1;
+    if (i === 1) {
+      num1 = random;
+      dice1.innerHTML = num1;
+    } else {
+      num2 = random;
+      dice2.innerHTML = num2;
+    }
+  }
 
-  if (num1 === num2) moveCount = 4;
-  if (num1 !== num2) moveCount = 2;
+  num1 === num2 ? moveCount = 4 : moveCount = 2;
 };
 
 dice1.addEventListener("click", rollDice);
@@ -69,33 +74,34 @@ const startGame = () => {
 
   for (let i = 0; i < 144; i++) {
     const div = document.createElement("div");
+    let imgClass = "triangle";
+    let imgSrc = "img/triangle.svg";
     div.setAttribute("class", "slot");
     div.setAttribute("id", i);
     div.style.width = `${98 / 12}%`;
     div.style.height = `${100 / 12}%`;
     const img = document.createElement("img");
-    img.setAttribute("src", "img/triangle.svg");
-    img.setAttribute("class", "triangle");
     img.style.height = `${100 * 5}%`;
-
-    const img2 = document.createElement("img");
-    img2.setAttribute("src", "img/triangleRevert.svg");
-    img2.setAttribute("class", "triangle2");
-    img2.style.height = `${100 * 5}%`;
+    img.style.opacity = "0.7";
 
     if (i < 12) {
       div.appendChild(img);
-      img.style.opacity = "0.7";
-
-      if (i % 2 === 1) img.style.opacity = "0.35";
+      
+      imgClass = "triangle";
+      imgSrc = "img/triangle.svg";
     }
 
     if (i > 131) {
-      div.appendChild(img2);
-      img2.style.opacity = "0.7";
+      div.appendChild(img);
 
-      if (i % 2 === 1) img2.style.opacity = "0.35";
+      imgClass = "triangle2";
+      imgSrc = "img/triangleRevert.svg";
     }
+
+    if (i % 2 === 1) img.style.opacity = "0.35";
+
+    img.setAttribute("src", imgSrc);
+    img.setAttribute("class", imgClass);
 
     if (
       i === 5 ||
@@ -267,46 +273,48 @@ const placeSlots = () => {
           }
         }
 
-        if (slotIndex < 72) topIndex = slotIndex;
-        if (slotIndex > 71) bottomIndex = slotIndex;
+        if (slotIndex < 72) topIndex = slotIndex - 24;
+        if (slotIndex > 71) bottomIndex = slotIndex + 24;
+
+        console.log(topIndex, bottomIndex)
 
         while (slotIndex > 12) {
           slotIndex -= 12;
-          topIndex = slotIndex;
         }
-
-        if (topIndex < 72) topIndex = slotIndex;
 
         for (let k = 0; k < 12; k++) {
           let curEl = eachSquare[slotIndex];
           slotIndex += 12;
-
-          if (curEl.children.length > 0) {
-            console.log(curEl);
-            for (let i = 0; i < curEl.children.length; i++) {
-              if (
-                curEl.children[i].classList.contains(
-                  player1.active ? "whiteSlot" : "blackSlot"
-                )
-              ) {
-                let curId = parseInt(curEl.id);
-
-                if (!prevParent && dragged) prevParent = eachSquare[curId + 12];
-                if (!prevParent2 && dragged2)
-                  prevParent2 = eachSquare[curId + 12];
-                if (!prevParent3 && dragged3)
-                  prevParent3 = eachSquare[curId + 12];
-                if (!prevParent4 && dragged4)
-                  prevParent4 = eachSquare[curId + 12];
-                break;
-              }
+          
+          for (let i = 0; i < curEl.children.length; i++) {
+            if (
+              (curEl.children[i].classList.contains("whiteSlot") ||
+              curEl.children[i].classList.contains("blackSlot")) &&
+              curEl.children[i]?.nodeName !== "IMG" &&
+              curEl.children[i].length
+            ) {
+              let curId = parseInt(curEl.id);
+              console.log('lala2')
+              if (!prevParent && dragged) prevParent = eachSquare[curId + 12];
+              if (!prevParent2 && dragged2)
+                prevParent2 = eachSquare[curId + 12];
+              if (!prevParent3 && dragged3)
+                prevParent3 = eachSquare[curId + 12];
+              if (!prevParent4 && dragged4)
+                prevParent4 = eachSquare[curId + 12];
+              break;
             }
-          } else {
-            console.log("hehe");
-            if (!prevParent && dragged) prevParent = eachSquare[topIndex];
-            if (!prevParent2 && dragged2) prevParent2 = eachSquare[topIndex];
-            if (!prevParent3 && dragged3) prevParent3 = eachSquare[topIndex];
-            if (!prevParent4 && dragged4) prevParent4 = eachSquare[topIndex];
+            
+            if (
+              !curEl.children[i].length ||
+              curEl.children[i]?.nodeName === "IMG"
+            ) {
+              console.log('lala')
+              if (!prevParent && dragged) prevParent = eachSquare[topIndex ? topIndex : bottomIndex];
+              if (!prevParent2 && dragged2) prevParent2 = eachSquare[topIndex ? topIndex : bottomIndex];
+              if (!prevParent3 && dragged3) prevParent3 = eachSquare[topIndex ? topIndex : bottomIndex];
+              if (!prevParent4 && dragged4) prevParent4 = eachSquare[topIndex ? topIndex : bottomIndex];
+            }
           }
         }
         // continue from : we cannot catch childrens !!
@@ -326,6 +334,8 @@ const placeSlots = () => {
 
         allow = true;
         moveCount--;
+        topIndex = false;
+        bottomIndex = false;
       }
     });
   }
